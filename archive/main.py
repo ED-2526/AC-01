@@ -1,11 +1,13 @@
 ##Carregar llibreries
-import pandas as pd         ###py -m pip install pandas
+import pandas as pd ###py -m pip install pandas
+import numpy as np ###py -m pip install numypy
 
 from sklearn.decomposition import PCA ###py -m pip install scikit-learn
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans 
-from sklearn.model_selection import train_test_split
 from yellowbrick.cluster import KElbowVisualizer ##py -m pip install yellowbrick
+from sklearn.metrics import davies_bouldin_score
+from sklearn.metrics import calinski_harabasz_score
 
 import seaborn as sns ##py -m pip install seaborn
 
@@ -59,58 +61,44 @@ df["genre"] = df["genre"].map(freq)
 print("Mostra:", df.head())
 
 ##Establir model
-#1) Dividir train i test
-#Dividir train i test
+#1) Copiar df
 data = df.copy()
-x_train, x_test = train_test_split(data, test_size = 0.2, random_state = 0)
 
 #2) Calcular k millor
 model = KMeans()
 visualizer = KElbowVisualizer(model, k=(2,30), timings=False, metric='distortion')
-visualizer.fit(x_train)       
+visualizer.fit(data)       
 #visualizer.show()        
 k = visualizer.elbow_value_ #millor k
 
 #3) Fer amb Scaler (mateix rang totes feature) i KMeans 
 scaler = StandardScaler()
-x_train_scal = scaler.fit_transform(x_train)
-x_test_scal = scaler.transform(x_test)
-
+data_scal = scaler.fit_transform(data)
 kmeans = KMeans(n_clusters=k, n_init=10, random_state=0)
 
-#4) Entrenar amb train i predir test
-pred_train =kmeans.fit_predict(x_train_scal)
-pred_test = kmeans.predict(x_test_scal)
+#4) Entrenar i predir 
+pred = kmeans.fit_predict(data_scal)
 
 ##Visualitzar pred
 #1) Reduir components a 2 amb PCA
 pca = PCA(n_components=2)
-x_train_2 = pca.fit_transform(x_train_scal)
-x_test_2 = pca.transform(x_test_scal)
+data_2 = pca.fit_transform(data_scal)
 
 #Mirar la rellevàcia de cada feature en el càlcul de la component i la variancia per component
-#pd.DataFrame(data=pca.components_, columns=x_train_scal.columns, index=['C1', 'C2'])
+#pd.DataFrame(data=pca.components_, columns=data.columns, index=['C1', 'C2'])
 #pca.explained_variance_ratio.cumsum()
 
-#Crear dataframe per visualitzar per train i test
-df_train = pd.DataFrame(x_train_2, columns=['Component 1', 'Component 2'])
-df_train["cluster"] = pred_train
-
-df_test = pd.DataFrame(x_test_2, columns=['Component 1', 'Component 2'])
-df_test["cluster"] = pred_test
+#Crear dataframe per visualitzar 
+df_2 = pd.DataFrame(data_2, columns=['Component 1', 'Component 2'])
+df_2["cluster"] = pred
 
 #2) Scatterplot (en jupyter)
 ##Plot les dades train
 """
-center = pca.transform(kmeans.cluster_centers_)
-sns.scatterplot(data=df_train, x='Component 1', y='Component 2', hue='cluster', palette='viridis')##Plot les dades test
+center = pca.transform(model.cluster_centers_)
+sns.scatterplot(data=df_2, x='Component 1', y='Component 2', hue='cluster', palette='viridis')##Plot les dades test
 plt.scatter([c[0] for c in center],[c[1] for c in center], marker='X', linewidths=3, color='red')
 plt.show()
-
-##Plot les dades test
-sns.scatterplot(data=df_test, x='Component 1', y='Component 2', hue='cluster', palette='viridis')##Plot les dades test
-plt.scatter([c[0] for c in center],[c[1] for c in center], marker='X', linewidths=3, color='red')
-plt.show()
-
 """
-
+#Evaluat: higher better - lower better
+print(calinski_harabasz_score(data, kmeans.labels_), davies_bouldin_score(data, kmeans.labels_))

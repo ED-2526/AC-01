@@ -70,7 +70,7 @@ x_train, x_test = train_test_split(data, test_size = 0.2, random_state = 0)
 model = KMeans()
 visualizer = KElbowVisualizer(model, k=(2,30), timings=False, metric='distortion')
 visualizer.fit(x_train)       
-visualizer.show()        
+#visualizer.show()        
 k = visualizer.elbow_value_ #millor k
 
 #3) Fer amb Scaler (mateix rang totes feature) i KMeans 
@@ -104,7 +104,7 @@ df_test["cluster"] = pred_test
 #2) Scatterplot (en jupyter)
 ##Plot les dades train
 """
-center = pca.transform(model.cluster_centers_)
+center = pca.transform(kmeans.cluster_centers_)
 sns.scatterplot(data=df_train, x='Component 1', y='Component 2', hue='cluster', palette='viridis')##Plot les dades test
 plt.scatter([c[0] for c in center],[c[1] for c in center], marker='X', linewidths=3, color='red')
 plt.show()
@@ -113,4 +113,5 @@ plt.show()
 sns.scatterplot(data=df_test, x='Component 1', y='Component 2', hue='cluster', palette='viridis')##Plot les dades test
 plt.scatter([c[0] for c in center],[c[1] for c in center], marker='X', linewidths=3, color='red')
 plt.show()
+
 """

@@ -1,7 +1,5 @@
 ##Carregar llibreries
 import pandas as pd         ###py -m pip install pandas
-from sklearn.pipeline import Pipeline  ###py -m pip install scikit-
-import numpy as np ###py -m pip install numypy
 
 from sklearn.decomposition import PCA ###py -m pip install scikit-learn
 from sklearn.preprocessing import StandardScaler
@@ -115,3 +113,4 @@ plt.scatter([c[0] for c in center],[c[1] for c in center], marker='X', linewidth
 plt.show()
 
 """
+

@@ -1,3 +1,25 @@
+"""
+Docstring for main
+genre: The genre in which the track belongs
+artist_name: The artists' names who performed the track
+track_name: Name of the track
+track_id: The Spotify ID for the track
+popularity: The popularity of a track is a value between 0 and 100
+acousticness: A confidence measure from 0.0 to 1.0 of whether the track is acoustic
+danceability: Danceability describes how suitable a track is for dancing based
+duration_ms: The track length in milliseconds
+energy: Measure of intensity and activity from 0.0 to 1.0
+instrumentalness: Predicts whether a track contains no vocals (nearer 1=no vocals)
+key: The key the track is in
+liveness: Detects the presence of an audience in the recording (higher 0.8=live)
+loudness: The overall loudness of a track in decibels (dB)
+mode: Mode indicates the scale (major or minor) of a track
+speechiness: Speechiness detects the presence of spoken words in a track
+tempo: The overall estimated tempo of a track in beats per minute
+time_signature: An estimated time signature
+valence: A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track
+"""
+
 ##A)Carregar llibreries
 import pandas as pd ###py -m pip install pandas
 import numpy as np ###py -m pip install numypy
@@ -91,9 +113,11 @@ df2["time_signature"] = df2["time_signature"].map(freq)
 
 #5) Mirar correlació (pearson)
 corr_matrix = df.corr()
+"""
 plt.figure(figsize=(12, 12))
 ax = sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
 plt.show()
+"""
 
 ##D)Establir model
 #1) Bucle per tipus de codificació

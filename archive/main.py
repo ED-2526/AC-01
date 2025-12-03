@@ -89,6 +89,12 @@ df2["mode"] = df2["mode"].map(freq)
 freq = df2["time_signature"].value_counts(normalize=True)
 df2["time_signature"] = df2["time_signature"].map(freq)
 
+#5) Mirar correlació (pearson)
+corr_matrix = df.corr()
+plt.figure(figsize=(12, 12))
+ax = sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+plt.show()
+
 ##D)Establir model
 #1) Bucle per tipus de codificació
 datasets = [df1, df2]
@@ -97,7 +103,7 @@ for data in datasets:
 
     #2) Calcular k millor
     model = KMeans()
-    visualizer = KElbowVisualizer(model, k=(2,30), timings=False, metric='distortion')
+    visualizer = KElbowVisualizer(model, k=(2,30), timings=False, metric='distortion') #silhouette/calinski_harabasz
     visualizer.fit(data)       
     #visualizer.show()        
     k = visualizer.elbow_value_ #millor k
@@ -117,7 +123,7 @@ for data in datasets:
 
     #Mirar la rellevàcia de cada feature en el càlcul de la component i la variancia per component
     #pd.DataFrame(data=pca.components_, columns=data.columns, index=['C1', 'C2'])
-    #print(pca.explained_variance_ratio.cumsum())
+    print("Variància explicada acum: ", pca.explained_variance_ratio_.cumsum())
 
     #Crear dataframe per visualitzar 
     pca_2 = pd.DataFrame(data_scal_2, columns=['Component 1', 'Component 2'])

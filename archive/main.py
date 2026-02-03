@@ -38,7 +38,7 @@ import matplotlib.pyplot as plt ##py -m pip install matplotlib
 from scipy.spatial.distance import euclidean
 
 ##B)Carregar el dataset
-df = pd.read_csv('C:\\Users\\david\\Desktop\\AC\\AC-01-1\\archive\\SpotifyFeatures.csv')
+df = pd.read_csv('SpotifyFeatures.csv')
 #print(df.head()) #Mostra 5 rows
 print(df.info()) #Mostra el tipus de columns: df.dtypes
 

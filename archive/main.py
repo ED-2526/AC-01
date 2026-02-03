@@ -161,6 +161,31 @@ min_samples = 2 * data1_scal.shape[1]
 hdbscan = HDBSCAN(min_cluster_size=min_samples, min_samples=min_samples, n_jobs=-1, store_centers="centroid") #default metric: euclidean
 hdbscan1 = hdbscan.fit_predict(data1_scal)
 
+#DEF1 GMM
+#1) Trobar n_components
+n_components_range = range(18, 30)
+bics = []
+aics = []
+
+for n in n_components_range:
+    gmm = GaussianMixture(n_components=n, n_init=10, random_state=0)
+    gmm.fit(data1_scal)
+    bics.append(gmm.bic(data1_scal))
+    aics.append(gmm.aic(data1_scal))
+
+plt.figure(figsize=(12, 6))
+plt.plot(n_components_range, bics, label='BIC')
+plt.plot(n_components_range, aics, label='AIC')
+plt.xlabel('N_components')
+plt.ylabel('BIC / AIC')
+plt.legend(loc=2)
+plt.title('BIC and AIC segons components')
+plt.savefig("gm.png")
+plt.show()
+#2) Entrenar i predir amb GM
+gm = GaussianMixture(n_components=25, n_init=10, random_state=0) #default covariance_type: full 
+gm1 = gm.fit_predict(data1_scal)
+
 #EVALUACIO MODELS 
 #KMEANS
 print(calinski_harabasz_score(data1_scal, kmeans1), davies_bouldin_score(data1_scal, kmeans1))
